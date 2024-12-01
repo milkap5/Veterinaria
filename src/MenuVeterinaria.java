@@ -145,7 +145,9 @@ private static void guardarClientesEnArchivo() {
 }
 
 //metodo que trae todos los clientes del archivo .dat 
-private static void cargarClientes() {
+
+    /*
+    private static void cargarClientes() {
 	File archivo = new File("clientes.dat");
 
 // compruebo si el archivo existe
@@ -173,6 +175,8 @@ if (archivo.exists()) {
     System.out.println("El archivo de clientes no existe.");
     }
 }
+*/
+ */
 //TODO
 public static void otorgarTurno(){
 

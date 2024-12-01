@@ -13,17 +13,25 @@ public class Guardar {
         }
     }
 
-    // Método para cargar una lista de clientes desde un archivo (deserialización)
-    public static List<Cliente> cargarClientes(String ruta) {
-        List<Cliente> clientes = null;
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(ruta))) {
-            clientes = (List<Cliente>) in.readObject(); // deserializa la lista de clientes
-            System.out.println("Clientes cargados correctamente desde: " + ruta);
+    private static final String SUCCESS_MESSAGE = "Clients loaded successfully from: ";
+    private static final String ERROR_MESSAGE = "Error loading clients: ";
+
+    public static List<Cliente> CargarCliente(String path) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
+            return deserializeClients(in);
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error al cargar los clientes: " + e.getMessage());
+            System.out.println(ERROR_MESSAGE + e.getMessage());
+            return new ArrayList<>();
         }
-        return clientes != null ? clientes : new ArrayList<>();
     }
+
+    private static List<Cliente> deserializeClients(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        List<Cliente> clients = (List<Cliente>) in.readObject();
+        System.out.println(SUCCESS_MESSAGE + in);
+        return clients;
+    }
+
+
 
     // metodo para guardar una lista de animales en un archivo (serialización)
     public static void guardarAnimales(List<Animal> animales, String ruta) {
