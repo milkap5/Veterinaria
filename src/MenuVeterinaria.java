@@ -3,7 +3,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 //Clase MENU VETERINARIA donde estan todos los metodos para realizar las operaciones ABM correctamente.
-public class MenuVeterinaria {
+public class MenuVeterinaria extends Guardar{
 
 private static List<Animal> animales = new ArrayList<>();
 private static List<Cliente> clientes = new ArrayList<>();
@@ -14,7 +14,7 @@ public static void mostrarMenu() {
 	
 	//traigo los datos del archivo .dat CLIENTES 
 	try{
-	cargarClientes();
+	CargarCliente("clientes.dat");
 	}catch(Exception e) {
 		System.out.println("Error al cargar el archivo de clientes!"+e);
 	}
@@ -67,7 +67,7 @@ public static void ejecutarOpcion(int opcion) {
         String salir = scanner.nextLine().toLowerCase();
         
         if (salir.equals("s")) {
-            guardarClientesEnArchivo();  // Guardar antes de salir
+            guardarClientes(clientes, "clientes.dat");  // Guardar antes de salir
             System.out.println("Saliendo del programa...");
             System.exit(0);//sale de la app
         }else {return;}
@@ -126,14 +126,14 @@ public static void añadirCliente(){
         }
 
         clientes.add(cliente);
-        guardarClientesEnArchivo();  //guarda los cambios al archivo desp de agregar
+        guardarClientes(clientes, "clientes.dat");  //guarda los cambios al archivo desp de agregar
 
         System.out.println("Cliente " + nombreStrg + " añadido correctamente.");
     } catch (Exception e) {
         System.out.println("Hubo un error. Intenta de nuevo.");
     }
 }
-
+/*
 private static void guardarClientesEnArchivo() {
    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("clientes.dat"))) {
     // guardo la lista completa de clientes
@@ -143,7 +143,7 @@ private static void guardarClientesEnArchivo() {
         System.out.println("Hubo un error al guardar los datos de los clientes. " + e.getMessage());
     }
 }
-
+*/
 //metodo que trae todos los clientes del archivo .dat 
 
     /*
@@ -176,7 +176,6 @@ if (archivo.exists()) {
     }
 }
 */
- */
 //TODO
 public static void otorgarTurno(){
 
@@ -303,7 +302,7 @@ public static void listarClientes() {
     }
 
     //cuadno se modificaron o eliminaron los clientes, guardo la lista actualizada
-        guardarClientesEnArchivo();
+        guardarClientes(clientes, "clientes.dat");
     }
 
   
@@ -496,7 +495,7 @@ private static void añadirMascota() {
     
     Animal mascota = new Animal(nombreMascota, especie, edad);
     clienteSeleccionado.agregarAnimal(mascota);
-    guardarClientesEnArchivo();
+    guardarClientes(clientes,"clientes.dat");
     System.out.println("Mascota " + nombreMascota + " añadida correctamente a " + clienteSeleccionado.getNombre());
 }
 

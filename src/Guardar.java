@@ -12,7 +12,9 @@ public class Guardar {
             System.out.println("Error al guardar los clientes: " + e.getMessage());
         }
     }
-
+    
+    //convierto errores en strings 
+    //mejor manejo de errores 
     private static final String SUCCESS_MESSAGE = "Clients loaded successfully from: ";
     private static final String ERROR_MESSAGE = "Error loading clients: ";
 
