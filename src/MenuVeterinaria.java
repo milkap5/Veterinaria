@@ -177,6 +177,18 @@ if (archivo.exists()) {
 }
 */
 //TODO
+    
+    
+
+    String[] fechasInvalidas = {
+            "32/01/2023", "30/02/2023", "31/04/2023", "31/06/2023", "31/09/2023", "31/11/2023",
+            "29/02/2021", // Año no bisiesto
+            "31/02/2023", "31/02/2024", // Febrero no tiene 31 días
+            "00/01/2023", "01/13/2023"  // Meses inválidos
+    };    
+    
+    
+    
 public static void otorgarTurno(){
 
     System.out.println("\n************ Otorgar Turno ************ ");
@@ -184,54 +196,67 @@ public static void otorgarTurno(){
         System.out.println("No hay clientes registrados.");
         return;
     }
+
     System.out.println("Clientes registrados:");
-    
+
     for (int i = 0; i < clientes.size(); i++) {
         System.out.println((i + 1) + ". " + clientes.get(i).getNombre());
     }
-    
+
     System.out.print("Selecciona el cliente para otorgar el turno: ");
     int indiceCliente = Integer.parseInt(scanner.nextLine()) - 1;
-    
+
     if (indiceCliente < 0 || indiceCliente >= clientes.size()) {
         System.out.println("Cliente no válido.");
         return;
     }
-    
-    //TODO
-    String fechaFormateada = null;
-    Cliente cliente = clientes.get(indiceCliente);
-    try {
-    SimpleDateFormat sdfEntrada = new SimpleDateFormat("dd/MM/yyyy");
+    //Guardar datos del cliente seleccionado
 
-    System.out.print("Fecha del turno (DD/MM/YYYY): ");
+// Obtener el cliente seleccionado
+    Cliente clienteSeleccionado = clientes.get(indiceCliente);
     
-    // leo la fecha ingresada como cadena
-    String fechaStr = scanner.nextLine();
+    //INGRESAR FECHA Y PARSEARLA 
+    System.out.println("ingrese el motivo del turno");
+    String motivo = scanner.nextLine();
+    System.out.println("ingresar fecha en formato DD/MM/YYYY");
+    System.out.println("DIA: ");
+    String dia = scanner.nextLine();
+    System.out.println("MES:")
+    String mes = scanner.nextLine();
+    System.out.println("AÑO:")
+    String anio = scanner.nextLine();
+    
+    //Parseo
     
     try {
-        // convertir la cadena ingresada en un objeto date
-        Date fecha = sdfEntrada.parse(fechaStr);
+        // Create a date string from user inputs
+        String fechaStr = dia + "/" + mes + "/" + anio;
 
-        // muestro la fecha formateada
-        fechaFormateada = sdfEntrada.format(fecha);
-        System.out.println("Fecha: " + fechaFormateada);
-        
+        // Define the date format to parse
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormat.setLenient(false); // Disable leniency to catch invalid dates
+
+        // Convert string to date
+        Date fechaTurno = dateFormat.parse(fechaStr);
+
+        // Check if the date is valid by comparing it to the invalid dates array
+        if (Arrays.asList(fechasInvalidas).contains(fechaStr)) {
+            System.out.println("La fecha ingresada es inválida.");
+        } else {
+            System.out.println("Fecha del turno otorgado: " + fechaTurno);
+            List<Turnos> turnos=new arraylist();
+            Turnos turno=new Turnos(fechaTurno,clienteSeleccionado,motivo)
+            turnos.add(turnos);
+            System.out.println(turnos);
+        }
     } catch (ParseException e) {
-        // maneja el error si el formato no es válido
-        System.out.println("Error: El formato de la fecha no es válido.");
+        System.out.println("Formato de fecha incorrecto. Por favor, intenta de nuevo.");
     }
     
-    System.out.print("Motivo del turno: ");
-    String motivoTurno = scanner.nextLine();
+  
+
+
     
-    String turno = "Cliente: " + cliente.getNombre() + " | Fecha: " + fechaFormateada + " | Motivo: " + motivoTurno;
-    turnos.add(turno);
-    System.out.println("Turno otorgado correctamente.");
-    }catch(Exception e) {
-    	System.out.println("Hubo un error al tratar de guardar el turno! Por favor, intenta nuevamente\n"+e);
-    	return;
-    }
 }
 
 
