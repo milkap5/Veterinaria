@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+//import java.time.LocalDate;
 //Clase MENU VETERINARIA donde estan todos los metodos para realizar las operaciones ABM correctamente.
 public class MenuVeterinaria extends Guardar{
 
@@ -30,6 +31,7 @@ public static void mostrarMenu() {
     System.out.println("7. Salir");
     System.out.print("Selecciona una opción: ");
 }
+
 
 public static int obtenerOpcion() {
     int opcion = -1;
@@ -180,7 +182,7 @@ if (archivo.exists()) {
     
     
 
-    String[] fechasInvalidas = {
+   static  String[] fechasInvalidas = {
             "32/01/2023", "30/02/2023", "31/04/2023", "31/06/2023", "31/09/2023", "31/11/2023",
             "29/02/2021", // Año no bisiesto
             "31/02/2023", "31/02/2024", // Febrero no tiene 31 días
@@ -209,7 +211,7 @@ if (archivo.exists()) {
 
         if (fechaTurno != null) {
             // Guardar turno
-            Turnos turno = new Turnos(fechaTurno, clienteSeleccionado, motivo);
+            Turno turno = new Turno(fechaTurno, clienteSeleccionado, motivo); 
             registrarTurno(turno);
             System.out.println(turno);
         } else {
@@ -266,8 +268,8 @@ if (archivo.exists()) {
         return null;
     }
 
-    private static void registrarTurno(Turnos turno) {
-        List<Turnos> turnos = new ArrayList<>();
+    private static void registrarTurno(Turno turno) {
+        List<Turno> turnos = new ArrayList<>();
         turnos.add(turno);
     }
 
