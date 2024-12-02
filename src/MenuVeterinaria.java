@@ -11,7 +11,7 @@ private static List<String> turnos = new ArrayList<>(); // Lista de turnos como 
 private static Scanner scanner = new Scanner(System.in);
 
 public static void mostrarMenu() {
-	
+
 	//traigo los datos del archivo .dat CLIENTES 
 	try{
 	CargarCliente("clientes.dat");
@@ -185,79 +185,91 @@ if (archivo.exists()) {
             "29/02/2021", // Año no bisiesto
             "31/02/2023", "31/02/2024", // Febrero no tiene 31 días
             "00/01/2023", "01/13/2023"  // Meses inválidos
-    };    
-    
-    
-    
-public static void otorgarTurno(){
+    };
 
-    System.out.println("\n************ Otorgar Turno ************ ");
-    if (clientes.isEmpty()) {
-        System.out.println("No hay clientes registrados.");
-        return;
-    }
 
-    System.out.println("Clientes registrados:");
+    public static void otorgarTurno() {
+        System.out.println("\n************ Otorgar Turno ************ ");
 
-    for (int i = 0; i < clientes.size(); i++) {
-        System.out.println((i + 1) + ". " + clientes.get(i).getNombre());
-    }
-
-    System.out.print("Selecciona el cliente para otorgar el turno: ");
-    int indiceCliente = Integer.parseInt(scanner.nextLine()) - 1;
-
-    if (indiceCliente < 0 || indiceCliente >= clientes.size()) {
-        System.out.println("Cliente no válido.");
-        return;
-    }
-    //Guardar datos del cliente seleccionado
-
-// Obtener el cliente seleccionado
-    Cliente clienteSeleccionado = clientes.get(indiceCliente);
-    
-    //INGRESAR FECHA Y PARSEARLA 
-    System.out.println("ingrese el motivo del turno");
-    String motivo = scanner.nextLine();
-    System.out.println("ingresar fecha en formato DD/MM/YYYY");
-    System.out.println("DIA: ");
-    String dia = scanner.nextLine();
-    System.out.println("MES:")
-    String mes = scanner.nextLine();
-    System.out.println("AÑO:")
-    String anio = scanner.nextLine();
-    
-    //Parseo
-    
-    try {
-        // Create a date string from user inputs
-        String fechaStr = dia + "/" + mes + "/" + anio;
-
-        // Define the date format to parse
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        dateFormat.setLenient(false); // Disable leniency to catch invalid dates
-
-        // Convert string to date
-        Date fechaTurno = dateFormat.parse(fechaStr);
-
-        // Check if the date is valid by comparing it to the invalid dates array
-        if (Arrays.asList(fechasInvalidas).contains(fechaStr)) {
-            System.out.println("La fecha ingresada es inválida.");
-        } else {
-            System.out.println("Fecha del turno otorgado: " + fechaTurno);
-            List<Turnos> turnos=new arraylist();
-            Turnos turno=new Turnos(fechaTurno,clienteSeleccionado,motivo)
-            turnos.add(turnos);
-            System.out.println(turnos);
+        if (clientes.isEmpty()) {
+            informarSinClientes();
+            return;
         }
-    } catch (ParseException e) {
-        System.out.println("Formato de fecha incorrecto. Por favor, intenta de nuevo.");
+
+        mostrarClientes();
+        int indiceCliente = obtenerIndiceCliente();
+        if (!esIndiceValido(indiceCliente)) {
+            informarClienteNoValido();
+            return;
+        }
+
+        Cliente clienteSeleccionado = clientes.get(indiceCliente);
+        String motivo = solicitarInput("Ingrese el motivo del turno");
+        Date fechaTurno = solicitarFechaTurno();
+
+        if (fechaTurno != null) {
+            // Guardar turno
+            Turnos turno = new Turnos(fechaTurno, clienteSeleccionado, motivo);
+            registrarTurno(turno);
+            System.out.println(turno);
+        } else {
+            System.out.println("Formato de fecha incorrecto. Por favor, intenta de nuevo.");
+        }
     }
-    
-  
 
+    private static void informarSinClientes() {
+        System.out.println("No hay clientes registrados.");
+    }
 
-    
-}
+    private static void mostrarClientes() {
+        System.out.println("Clientes registrados:");
+        for (int i = 0; i < clientes.size(); i++) {
+            System.out.println((i + 1) + ". " + clientes.get(i).getNombre());
+        }
+    }
+
+    private static int obtenerIndiceCliente() {
+        System.out.print("Selecciona el cliente para otorgar el turno: ");
+        return Integer.parseInt(scanner.nextLine()) - 1;
+    }
+
+    private static boolean esIndiceValido(int indice) {
+        return indice >= 0 && indice < clientes.size();
+    }
+
+    private static void informarClienteNoValido() {
+        System.out.println("Cliente no válido.");
+    }
+
+    private static String solicitarInput(String mensaje) {
+        System.out.println(mensaje);
+        return scanner.nextLine();
+    }
+
+    private static Date solicitarFechaTurno() {
+        try {
+            String dia = solicitarInput("Ingresa el día:");
+            String mes = solicitarInput("Ingresa el mes:");
+            String anio = solicitarInput("Ingresa el año:");
+            String fechaStr = dia + "/" + mes + "/" + anio;
+
+            if (!Arrays.asList(fechasInvalidas).contains(fechaStr)) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateFormat.setLenient(false);
+                return dateFormat.parse(fechaStr);
+            } else {
+                System.out.println("La fecha ingresada es inválida.");
+            }
+        } catch (ParseException e) {
+            return null;
+        }
+        return null;
+    }
+
+    private static void registrarTurno(Turnos turno) {
+        List<Turnos> turnos = new ArrayList<>();
+        turnos.add(turno);
+    }
 
 
 

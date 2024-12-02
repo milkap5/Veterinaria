@@ -2,16 +2,16 @@ import java.time.LocalDate;
 
 public class Turno {
     private LocalDate fecha;
-    private Cliente _cliente;
-    private string motivoturno;
+    private Cliente cliente;
+    private String motivoTurno; // Renamed variable for consistency and clarity
 
-    public Turno(){}
+    public Turno() {
+    }
 
-
-    public Turno(LocalDate fecha, Cliente _cliente, string motivoturno) {
+    public Turno(LocalDate fecha, Cliente cliente, String motivoTurno) {
         this.fecha = fecha;
-        this.clienteId = clienteId;
-        this.motivoturno = motivoturno;
+        this.cliente = cliente;
+        this.motivoTurno = motivoTurno;
     }
 
     public LocalDate getFecha() {
@@ -22,28 +22,28 @@ public class Turno {
         this.fecha = fecha;
     }
 
-    public int getClienteId() {
-        return clienteId;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setClienteId(int clienteId) {
-        this.clienteId = clienteId;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public string getMotivoturno() {
-        return motivoturno;
+    public String getMotivoTurno() {
+        return motivoTurno;
     }
 
-    public void setMotivoturno(string motivoturno) {
-        this.motivoturno = motivoturno;
+    public void setMotivoTurno(String motivoTurno) {
+        this.motivoTurno = motivoTurno;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    @Override
+    public String toString() {
         return "Turno{" +
                 "fecha=" + fecha +
-                ", clienteId=" + clienteId +
-                ", motivoturno=" + motivoturno +
+                ", clienteId=" + cliente.getId() + // Using cliente.getId() for better encapsulation
+                ", motivoTurno='" + motivoTurno + '\'' +
                 '}';
     }
 }
