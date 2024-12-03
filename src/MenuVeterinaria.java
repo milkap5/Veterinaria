@@ -87,7 +87,7 @@ public static void ejecutarOpcion(int opcion) {
 public static void añadirCliente(){
     	
     System.out.println("\n************ Añadir Cliente ************");
-    System.out.println("Por favor, a contnuacion ingrese los datos del cliente");
+    System.out.println("Por favor, a continuación ingrese los datos del cliente");
     
     try {
         String nombreStrg;
@@ -95,14 +95,21 @@ public static void añadirCliente(){
         String direccionStrg;
         String telefonoStrg;
 
+        // Solicitar nombre sin permitir espacios en blanco
         System.out.print("Nombre: ");
-        nombreStrg = scanner.nextLine().toUpperCase();
-        System.out.println("DNI: ");
-        dniStrg = scanner.nextLine().toUpperCase();
+        nombreStrg = solicitarInputNoVacio().toUpperCase();
+        
+        // Solicitar DNI sin permitir espacios en blanco
+        System.out.print("DNI: ");
+        dniStrg = solicitarInputNoVacio().toUpperCase();
+        
+        // Solicitar dirección sin permitir espacios en blanco
         System.out.print("Dirección: ");
-        direccionStrg = scanner.nextLine().toUpperCase();
+        direccionStrg = solicitarInputNoVacio().toUpperCase();
+        
+        // Solicitar teléfono sin permitir espacios en blanco
         System.out.print("Teléfono: ");
-        telefonoStrg = scanner.nextLine().toUpperCase();
+        telefonoStrg = solicitarInputNoVacio().toUpperCase();
 
         Cliente cliente = new Cliente(nombreStrg, dniStrg, direccionStrg, telefonoStrg);
 
@@ -140,6 +147,19 @@ public static void añadirCliente(){
         System.out.println("Hubo un error. Intenta de nuevo.");
     }
 }
+
+// Método auxiliar para solicitar entrada no vacía
+private static String solicitarInputNoVacio() {
+    String input;
+    do {
+        input = scanner.nextLine().trim(); // Eliminar espacios en blanco
+        if (input.isEmpty()) {
+            System.out.println("La entrada no puede estar vacía. Inténtalo de nuevo:");
+        }
+    } while (input.isEmpty());
+    return input;
+}
+
 /*
 private static void guardarClientesEnArchivo() {
    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("clientes.dat"))) {
