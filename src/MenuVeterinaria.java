@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 //Clase MENU VETERINARIA donde estan todos los metodos para realizar las operaciones ABM correctamente.
 public class MenuVeterinaria extends Guardar{
 
@@ -37,6 +36,7 @@ public static void mostrarMenu() {
     System.out.println("7. Salir");
     System.out.print("Selecciona una opción: ");
 }
+
 
 public static int obtenerOpcion() {
     int opcion = -1;
@@ -208,7 +208,7 @@ if (archivo.exists()) {
 
         if (fechaTurno != null) {
             // Guardar turno
-            Turno turno = new Turno(fechaTurno, clienteSeleccionado, motivo);
+             Turno turno = new Turno(fechaTurno, clienteSeleccionado, motivo);
             registrarTurno(turno);
             System.out.println(turno);
         } else {
