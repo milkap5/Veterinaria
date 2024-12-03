@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 //Clase MENU VETERINARIA donde estan todos los metodos para realizar las operaciones ABM correctamente.
 public class MenuVeterinaria extends Guardar{
 
@@ -9,6 +10,12 @@ private static List<Animal> animales = new ArrayList<>();
 private static List<Cliente> clientes = new ArrayList<>();
 private static List<String> turnos = new ArrayList<>(); // Lista de turnos como ejemplo
 private static Scanner scanner = new Scanner(System.in);
+private static String[] fechasInvalidas = {
+    "32/01/2023", "30/02/2023", "31/04/2023", "31/06/2023", "31/09/2023", "31/11/2023",
+    "29/02/2021", // Año no bisiesto
+    "31/02/2023", "31/02/2024", // Febrero no tiene 31 días
+    "00/01/2023", "01/13/2023"  // Meses inválidos
+};
 
 public static void mostrarMenu() {
 
@@ -180,14 +187,6 @@ if (archivo.exists()) {
     
     
 
-    String[] fechasInvalidas = {
-            "32/01/2023", "30/02/2023", "31/04/2023", "31/06/2023", "31/09/2023", "31/11/2023",
-            "29/02/2021", // Año no bisiesto
-            "31/02/2023", "31/02/2024", // Febrero no tiene 31 días
-            "00/01/2023", "01/13/2023"  // Meses inválidos
-    };
-
-
     public static void otorgarTurno() {
         System.out.println("\n************ Otorgar Turno ************ ");
 
@@ -209,7 +208,7 @@ if (archivo.exists()) {
 
         if (fechaTurno != null) {
             // Guardar turno
-            Turnos turno = new Turnos(fechaTurno, clienteSeleccionado, motivo);
+            Turno turno = new Turno(fechaTurno, clienteSeleccionado, motivo);
             registrarTurno(turno);
             System.out.println(turno);
         } else {
@@ -266,8 +265,8 @@ if (archivo.exists()) {
         return null;
     }
 
-    private static void registrarTurno(Turnos turno) {
-        List<Turnos> turnos = new ArrayList<>();
+    private static void registrarTurno(Turno turno) {
+        List<Turno> turnos = new ArrayList<>();
         turnos.add(turno);
     }
 

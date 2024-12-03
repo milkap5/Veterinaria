@@ -1,24 +1,25 @@
 import java.time.LocalDate;
-
+import java.util.Date;
 public class Turno {
-    private LocalDate fecha;
+    private Date fecha;
     private Cliente cliente;
     private String motivoTurno; // Renamed variable for consistency and clarity
 
     public Turno() {
     }
 
-    public Turno(LocalDate fecha, Cliente cliente, String motivoTurno) {
+
+    public Turno(Date fecha, Cliente cliente, String motivoTurno) {
         this.fecha = fecha;
         this.cliente = cliente;
         this.motivoTurno = motivoTurno;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -42,7 +43,7 @@ public class Turno {
     public String toString() {
         return "Turno{" +
                 "fecha=" + fecha +
-                ", clienteId=" + cliente.getId() + // Using cliente.getId() for better encapsulation
+                ", clienteId=" + cliente.getDni() + // Using cliente.getId() for better encapsulation
                 ", motivoTurno='" + motivoTurno + '\'' +
                 '}';
     }
