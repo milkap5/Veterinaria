@@ -1,17 +1,28 @@
+import java.io.Serializable;
 import java.util.Date;
-public class Turno {
-    private Date fecha;
+public class Turno implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Date fecha;
     private Cliente cliente;
-    private String motivoTurno; // Renamed variable for consistency and clarity
+	private String motivoTurno; 
 
+	
     public Turno() {
     }
-
 
     public Turno(Date fecha, Cliente cliente, String motivoTurno) {
         this.fecha = fecha;
         this.cliente = cliente;
+       // this.animal=animal;
         this.motivoTurno = motivoTurno;
+    }
+    
+    public Turno(Date Nuevafecha, String NuevoMotivo) {
+    	this.fecha=Nuevafecha;
+    	this.motivoTurno=NuevoMotivo;
     }
 
     public Date getFecha() {
@@ -29,7 +40,7 @@ public class Turno {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-
+    
     public String getMotivoTurno() {
         return motivoTurno;
     }
@@ -41,9 +52,9 @@ public class Turno {
     @Override
     public String toString() {
         return "Turno{" +
-                "fecha=" + fecha +
-                ", clienteId=" + cliente.getDni() + // Using cliente.getId() for better encapsulation
-                ", motivoTurno='" + motivoTurno + '\'' +
+                "fecha:" + fecha +
+                ", ID Cliente=" + cliente.getDni() + 
+                ", Motivo del Turno='" + motivoTurno + '\'' +
                 '}';
     }
 }

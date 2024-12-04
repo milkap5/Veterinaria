@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animal implements Serializable, Comparable<Animal> {
+public class Animal implements Serializable {
 
     /**
 	 * 
@@ -65,21 +65,5 @@ public class Animal implements Serializable, Comparable<Animal> {
         return "Animal [Nombre=" + nombre + ", Especie=" + especie + ", Edad=" + edad + " años]";
     }
 
-    // compareto sobreescrito comparando edad
-    @Override
-    public int compareTo(Animal otro) {
-        // ci la edad es la misma, no hay cambio
-        if (this.edad == otro.edad) {
-            return 0;
-        }
-        // ci este animal es mayor (edad mayor), devuelve un valor positivo
-        else if (this.edad > otro.edad) {
-            return 1;
-        }
-        // ci este animal es menor (edad menor), devuelve un valor negativo
-        else {
-            return -1;
-        }
-    }
     
 }

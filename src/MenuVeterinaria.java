@@ -2,27 +2,40 @@ import java.util.*;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 //Clase MENU VETERINARIA donde estan todos los metodos para realizar las operaciones ABM correctamente.
 public class MenuVeterinaria extends Guardar{
 
 private static List<Animal> animales = new ArrayList<>();
 private static List<Cliente> clientes = new ArrayList<>();
-private static List<String> turnos = new ArrayList<>(); // Lista de turnos como ejemplo
+private static List<Turno> turnos = new ArrayList<>(); 
+private static List<ProcedimientosMedicos> procedimientos= new ArrayList<>();
+
 private static Scanner scanner = new Scanner(System.in);
+
 private static String[] fechasInvalidas = {
     "32/01/2023", "30/02/2023", "31/04/2023", "31/06/2023", "31/09/2023", "31/11/2023",
     "29/02/2021", // Año no bisiesto
-    "31/02/2023", "31/02/2024", // Febrero no tiene 31 días
-    "00/01/2023", "01/13/2023"  // Meses inválidos
+    "31/02/2023", "31/02/2024", // Febero no tiene 31 dias
+    "00/01/2023", "01/13/2023"  // Meses invalidos
 };
 
 public static void mostrarMenu() {
-
-	//traigo los datos del archivo .dat CLIENTES 
+	//traigo los datos del archivo .dat CLIENTES TURNOS Y PROCEDIMIENTOS
 	try{
-	CargarCliente("clientes.dat");
+		clientes=CargarCliente("clientes.dat");
 	}catch(Exception e) {
 		System.out.println("Error al cargar el archivo de clientes!"+e);
+	}
+	try{
+		turnos=cargarTurnos("turnos.dat");
+	}catch(Exception e) {
+			System.out.println("Error al cargar el archivo de turnos!"+e);
+	}
+	try {
+		procedimientos=cargarProcedimientos("procedimientos.dat");
+	}catch(Exception e) {
+		System.out.println("Error al cargar el archivo de procedimientos!"+e);
 	}
 	
     System.out.println("\n************Bienvenido a Veterinaria Patitas!************");
@@ -103,16 +116,17 @@ public static void añadirCliente(){
         System.out.print("DNI: ");
         dniStrg = solicitarInputNoVacio().toUpperCase();
         
-        // Solicitar dirección sin permitir espacios en blanco
+        // Solicitar direccion sin permitir espacios en blanco
         System.out.print("Dirección: ");
         direccionStrg = solicitarInputNoVacio().toUpperCase();
         
-        // Solicitar teléfono sin permitir espacios en blanco
+        // Solicitar telefono sin permitir espacios en blanco
         System.out.print("Teléfono: ");
         telefonoStrg = solicitarInputNoVacio().toUpperCase();
 
         Cliente cliente = new Cliente(nombreStrg, dniStrg, direccionStrg, telefonoStrg);
-
+       
+        
         // Ahora preguntamos si desea agregar mascotas
         String agregarMascotas;
         do {
@@ -122,37 +136,51 @@ public static void añadirCliente(){
             if (agregarMascotas.equals("s")) {
                 System.out.print("Nombre de la mascota: ");
                 String nombreMascota = scanner.nextLine();
-                System.out.print("Qué animal es?(Gato, perro, cobayo..");
-                String especieMascota = scanner.nextLine();
+                System.out.print("Qué animal es?(Gato, perro, cobayo..)");
+                String especieMascota = scanner.nextLine().toUpperCase();
+                
+                //Bloque try-catch para manejar ingreso de especies q no correspondan
+                try{
+                	AnimalesEnum animalito;
+                	animalito=AnimalesEnum.valueOf(especieMascota);
+                	
+                }catch(Exception e) {
+                	System.out.println("Ingresaste un animal que no corresponde! Intenta de nuevo");
+                	e.printStackTrace();
+                	return;
+                }
+                
                 System.out.print("Edad de la mascota: ");
                 int edadMascota = Integer.parseInt(scanner.nextLine());
 
                 Animal mascota = new Animal(nombreMascota, especieMascota, edadMascota);
+               
                 cliente.agregarAnimal(mascota);
             }
         } while (agregarMascotas.equals("s"));
 
-        // verifico que el cliente tiene mascotas
+        // verifico que el cliente tiene  o no mascotas
         if (cliente.getAnimales().isEmpty()) {
             System.out.println("Este cliente no tiene mascotas.");
         } else {
             System.out.println("Mascotas agregadas al cliente.");
         }
-
+        
         clientes.add(cliente);
         guardarClientes(clientes, "clientes.dat");  //guarda los cambios al archivo desp de agregar
-
-        System.out.println("Cliente " + nombreStrg + " añadido correctamente.");
+        
+        //System.out.println("Cliente " + nombreStrg + " añadido correctamente.");
+        
     } catch (Exception e) {
         System.out.println("Hubo un error. Intenta de nuevo.");
     }
 }
 
-// Método auxiliar para solicitar entrada no vacía
+// metodo auxiliar para solicitar entrada no vacia
 private static String solicitarInputNoVacio() {
     String input;
     do {
-        input = scanner.nextLine().trim(); // Eliminar espacios en blanco
+        input = scanner.nextLine().trim(); // eliminar espacios en blanco
         if (input.isEmpty()) {
             System.out.println("La entrada no puede estar vacía. Inténtalo de nuevo:");
         }
@@ -160,49 +188,6 @@ private static String solicitarInputNoVacio() {
     return input;
 }
 
-/*
-private static void guardarClientesEnArchivo() {
-   try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("clientes.dat"))) {
-    // guardo la lista completa de clientes
-    oos.writeObject(clientes);
-    System.out.println("Clientes guardados correctamente en el archivo.");
-  } catch (IOException e) {
-        System.out.println("Hubo un error al guardar los datos de los clientes. " + e.getMessage());
-    }
-}
-*/
-//metodo que trae todos los clientes del archivo .dat 
-
-    /*
-    private static void cargarClientes() {
-	File archivo = new File("clientes.dat");
-
-// compruebo si el archivo existe
-if (archivo.exists()) {
-    //intento leer los clientes desde el archivo
-    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
-        //compruebo si el archivo no está vacío
-        if (archivo.length() == 0) {
-            System.out.println("El archivo está vacío. No se cargaron clientes.");
-            return;
-        }
-
-        //leo los clientes del archivo y asignarlos a la lista
-        clientes = (List<Cliente>) ois.readObject();
-        System.out.println("Clientes cargados correctamente desde el archivo.");
-
-    } catch (EOFException e) {
-        //caso en el q el archivo está vacío
-        System.out.println("El archivo está vacío. No se pudieron cargar clientes.");
-    } catch (IOException | ClassNotFoundException e) {
-        //error general de lectura o de tipo de objeto
-        System.out.println("Error al cargar los clientes desde el archivo. " + e.getMessage());
-    }
-} else {
-    System.out.println("El archivo de clientes no existe.");
-    }
-}
-*/
 //TODO
     
     
@@ -210,6 +195,7 @@ if (archivo.exists()) {
     public static void otorgarTurno() {
         System.out.println("\n************ Otorgar Turno ************ ");
 
+       
         if (clientes.isEmpty()) {
             informarSinClientes();
             return;
@@ -226,14 +212,18 @@ if (archivo.exists()) {
         String motivo = solicitarInput("Ingrese el motivo del turno");
         Date fechaTurno = solicitarFechaTurno();
 
-        if (fechaTurno != null) {
+        try{
+        	if (fechaTurno != null) {
             // Guardar turno
              Turno turno = new Turno(fechaTurno, clienteSeleccionado, motivo);
-            registrarTurno(turno);
-            System.out.println(turno);
+             registrarTurno(turno);
+            System.out.println("Se registró con exito el turno! Detalle: "+turno.toString());
         } else {
             System.out.println("Formato de fecha incorrecto. Por favor, intenta de nuevo.");
         }
+        }catch(Exception e) {
+        	System.out.println("Hubo un error al registrar el turno"+e.getMessage());
+        } 
     }
 
     private static void informarSinClientes() {
@@ -284,23 +274,25 @@ if (archivo.exists()) {
         }
         return null;
     }
-
+    
     private static void registrarTurno(Turno turno) {
         List<Turno> turnos = new ArrayList<>();
-        turnos.add(turno);
+        guardarTurno(turnos, "turnos.dat");
     }
-
 
 
 //TODO
 public static void listarClientes() {
     System.out.println("\n************ Listar Clientes ************");
 
-    // verifico si la lista de clientes está vacía
+   
+    // verifico si la lista de clientes esta vacia
     if (clientes.isEmpty()) {
         System.out.println("No hay clientes registrados.");
         return;
     }
+    
+    Collections.sort(clientes);
 
     // imprimo la lista de clientes
     for (int i = 0; i < clientes.size(); i++) {
@@ -363,18 +355,18 @@ public static void listarClientes() {
 
   
 public static void modificarCliente(Cliente cliente) {
-        System.out.println("\n************ Modificar Cliente ************");
-    System.out.print("Nuevo nombre: ");
-    String nombre = scanner.nextLine().toUpperCase();
+    System.out.println("\n************ Modificar Cliente ************");
+        
     System.out.print("Nueva dirección: ");
     String direccion = scanner.nextLine().toUpperCase();
     System.out.print("Nuevo teléfono: ");
     String telefono = scanner.nextLine();
     
-    cliente.setNombre(nombre);
     cliente.setDireccion(direccion);
     cliente.setTelefono(telefono);
     System.out.println("Cliente modificado correctamente.");
+    
+    
 }
 
 public static void eliminarCliente(Cliente cliente) {
@@ -397,7 +389,7 @@ public static void registrarProcedimientoMedico() {
         if(clientes.get(i).getAnimales().isEmpty()) {
         	System.out.println((i + 1) + ". " + "Cliente: "+clientes.get(i).getNombre()+" | No tiene mascotas");
         }else {
-        	System.out.println((i + 1) + ". " + "Cliente: "+clientes.get(i).getNombre()+" | Animal: "+clientes.get(i).getAnimales());
+        	System.out.println((i + 1) + ". " + "Cliente: "+clientes.get(i).getNombre()+" | "+clientes.get(i).getAnimales());
         }
      }
     }
@@ -409,13 +401,23 @@ public static void registrarProcedimientoMedico() {
         System.out.println("Cliente no válido.");
         return;
     }
+    
+    System.out.println("Desea ver o actualizar el historial medico? \nPresione 1 para ver, 2 para actualizar");
+    int opcion=scanner.nextInt();
+    
+    if(opcion==1) {
+    	if(animales.get(indiceAnimalito).getHistorialMedico() != null)
+    	System.out.println("Historial medico de: "+animales.get(indiceAnimalito).getHistorialMedico());
+    	else {
+    		System.out.println("Historial vacio.");
+    	}
+    }else {
 //TODO
-    File procedimientos = new File("procedimientos.dat");
- // compruebo si el archivo existe
-    if (procedimientos.exists()) {
+    try {
         //intento leer los clientes desde el archivo
     	System.out.println("\n************ Añadir Procedimiento Médico ************");
         try {
+        	
             System.out.print("Tipo de Procedimiento (Ejemplo: Vacunación, Cirugía): ");
             String tipoProcedimiento = scanner.nextLine();
 
@@ -427,19 +429,22 @@ public static void registrarProcedimientoMedico() {
 
             // agrego el procedimiento al historial de la mascota
             ((Animal) animales).agregarProcedimiento(procedimiento);
+            guardarProcedimiento(procedimientos, "procedimientos.dat");
 
             System.out.println("Procedimiento médico agregado correctamente.");
         } catch (Exception e) {
             System.out.println("Hubo un error al agregar el procedimiento médico: " + e.getMessage());
         }
-    } else {
-        System.out.println("El archivo de procedimientos medicos no existe.");
-        }
+    } catch (Exception e) {
+    	System.out.println("El archivo de procedimientos medicos no existe."+e);
+	}
+   }
 }
 
 
 public static void gestionTurnos() {
     	
+	cargarTurnos("turnos.dat");
 	System.out.println("\n************ Gestión de Turnos ************");
 if (turnos.isEmpty()) {
 	System.out.println("No hay turnos registrados.");
@@ -463,7 +468,7 @@ if (indiceTurno < 0 || indiceTurno >= turnos.size()) {
     return;
 }
 
-String turnoSeleccionado = turnos.get(indiceTurno);
+Turno turnoSeleccionado = turnos.get(indiceTurno);
 System.out.println("\nTurno seleccionado: " + turnoSeleccionado);
 System.out.println("1. Modificar Turno");
 System.out.println("2. Eliminar Turno");
@@ -488,12 +493,14 @@ public static void modificarTurno(int indiceTurno) {
     	
 	System.out.println("\n************ Modificar Turno ************");
 	System.out.print("Nueva fecha del turno (DD/MM/YYYY)");
-	String nuevaFecha = scanner.nextLine();
+	Date nuevaFecha = solicitarFechaTurno();
 	System.out.print("Nuevo motivo del turno: ");
 	String nuevoMotivo = scanner.nextLine();
 	
-	String nuevoTurno = "Fecha: " + nuevaFecha + " | Motivo: " + nuevoMotivo;
-	turnos.set(indiceTurno, nuevoTurno);
+	Turno nuevoTurno = new Turno(nuevaFecha, nuevoMotivo);
+	
+	turnos.add(nuevoTurno);
+	
 	System.out.println("Turno modificado correctamente.");
 }
 
@@ -501,6 +508,7 @@ public static void eliminarTurno(int indiceTurno) {
     turnos.remove(indiceTurno);
     System.out.println("Turno eliminado correctamente.");
 }
+//Actualizo el cliente al cual no se le ha asignado una mascota
 private static void añadirMascota() {
 	
 	if(clientes.isEmpty()) {
@@ -533,7 +541,7 @@ private static void añadirMascota() {
     // ingreso datos de la mascota
     System.out.print("Nombre de la mascota: ");
     String nombreMascota = scanner.nextLine();
-    System.out.print("Qué animal es?(Gato, perro, cobayos..");
+    System.out.print("Qué animal es?(Gato, perro, cobayos..)");
     
     String especie = scanner.nextLine().toUpperCase();//despues de 20min me di cuenta q si no pongo
     												//toUpperCase la evaluacion me daba false en el try :D
@@ -541,8 +549,9 @@ private static void añadirMascota() {
     	AnimalesEnum animalito;
     	animalito=AnimalesEnum.valueOf(especie);
     	
-    }catch(IllegalArgumentException e) {
+    }catch(Exception e) {
     	System.out.println("Ingresaste un animal que no corresponde! Intenta de nuevo");
+    	e.printStackTrace();
     	return;
     }
     

@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-abstract class Persona implements Serializable {
+abstract class Persona implements Serializable, Comparable<Persona>{
 
     /**
 	 * 
@@ -12,7 +12,7 @@ abstract class Persona implements Serializable {
     private String direccion;
     private String telefono;
 
-    // Constructor sin parámetros
+    // Constructor sin parametros
     public Persona() {}
 
     // Constructor con parámetros
@@ -23,7 +23,7 @@ abstract class Persona implements Serializable {
         this.telefono = telefono;
     }
 
-    // Getter y Setter para nombre
+    // Getter y Setter 
     public String getNombre() {
         return nombre;
     }
@@ -32,7 +32,6 @@ abstract class Persona implements Serializable {
         this.nombre = nombre;
     }
 
-    // Getter y Setter para dirección
     public String getDireccion() {
         return direccion;
     }
@@ -41,7 +40,6 @@ abstract class Persona implements Serializable {
         this.direccion = direccion;
     }
 
-    // Getter y Setter para teléfono
     public String getTelefono() {
         return telefono;
     }
@@ -50,7 +48,7 @@ abstract class Persona implements Serializable {
         this.telefono = telefono;
     }
 
-    // Método toString para representar el objeto como una cadena
+    // Metodo toString para representar el objeto como una cadena
     @Override
     public String toString() {
         return "Persona [Nombre=" + nombre + ", Dirección=" + direccion + ", Teléfono=" + telefono + "]";
@@ -63,4 +61,11 @@ abstract class Persona implements Serializable {
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
+	// compareto sobreescrito comparando nombre, orden alfabetico
+    @Override
+    public int compareTo(Persona otro) {
+        // Comparar por edad
+    	return this.nombre.compareTo(otro.nombre);
+    
+    }
 }
